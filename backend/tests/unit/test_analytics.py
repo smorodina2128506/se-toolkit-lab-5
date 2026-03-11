@@ -81,51 +81,105 @@ async def seed_data(session: AsyncSession):
     interactions = [
         # task_setup: high scores
         InteractionLog(
-            id=1, external_id=101, learner_id=1, item_id=2, kind="attempt",
-            score=100.0, checks_passed=4, checks_total=4,
+            id=1,
+            external_id=101,
+            learner_id=1,
+            item_id=2,
+            kind="attempt",
+            score=100.0,
+            checks_passed=4,
+            checks_total=4,
             created_at=datetime(2026, 2, 28, 10, 0),
         ),
         InteractionLog(
-            id=2, external_id=102, learner_id=2, item_id=2, kind="attempt",
-            score=75.0, checks_passed=3, checks_total=4,
+            id=2,
+            external_id=102,
+            learner_id=2,
+            item_id=2,
+            kind="attempt",
+            score=75.0,
+            checks_passed=3,
+            checks_total=4,
             created_at=datetime(2026, 2, 28, 11, 0),
         ),
         InteractionLog(
-            id=3, external_id=103, learner_id=3, item_id=2, kind="attempt",
-            score=100.0, checks_passed=4, checks_total=4,
+            id=3,
+            external_id=103,
+            learner_id=3,
+            item_id=2,
+            kind="attempt",
+            score=100.0,
+            checks_passed=4,
+            checks_total=4,
             created_at=datetime(2026, 2, 28, 14, 0),
         ),
         InteractionLog(
-            id=4, external_id=104, learner_id=4, item_id=2, kind="attempt",
-            score=50.0, checks_passed=2, checks_total=4,
+            id=4,
+            external_id=104,
+            learner_id=4,
+            item_id=2,
+            kind="attempt",
+            score=50.0,
+            checks_passed=2,
+            checks_total=4,
             created_at=datetime(2026, 3, 1, 9, 0),
         ),
         # task_tests: mixed scores
         InteractionLog(
-            id=5, external_id=105, learner_id=1, item_id=3, kind="attempt",
-            score=80.0, checks_passed=4, checks_total=5,
+            id=5,
+            external_id=105,
+            learner_id=1,
+            item_id=3,
+            kind="attempt",
+            score=80.0,
+            checks_passed=4,
+            checks_total=5,
             created_at=datetime(2026, 3, 1, 10, 0),
         ),
         InteractionLog(
-            id=6, external_id=106, learner_id=2, item_id=3, kind="attempt",
-            score=20.0, checks_passed=1, checks_total=5,
+            id=6,
+            external_id=106,
+            learner_id=2,
+            item_id=3,
+            kind="attempt",
+            score=20.0,
+            checks_passed=1,
+            checks_total=5,
             created_at=datetime(2026, 3, 1, 11, 0),
         ),
         InteractionLog(
-            id=7, external_id=107, learner_id=5, item_id=3, kind="attempt",
-            score=60.0, checks_passed=3, checks_total=5,
+            id=7,
+            external_id=107,
+            learner_id=5,
+            item_id=3,
+            kind="attempt",
+            score=60.0,
+            checks_passed=3,
+            checks_total=5,
             created_at=datetime(2026, 3, 2, 10, 0),
         ),
         # task_frontend: low scores
         InteractionLog(
-            id=8, external_id=108, learner_id=3, item_id=4, kind="attempt",
-            score=0.0, checks_passed=0, checks_total=3,
+            id=8,
+            external_id=108,
+            learner_id=3,
+            item_id=4,
+            kind="attempt",
+            score=0.0,
+            checks_passed=0,
+            checks_total=3,
             created_at=datetime(2026, 3, 2, 15, 0),
         ),
         # other lab interaction (should be excluded)
         InteractionLog(
-            id=9, external_id=109, learner_id=1, item_id=5, kind="attempt",
-            score=100.0, checks_passed=5, checks_total=5,
+            id=9,
+            external_id=109,
+            learner_id=1,
+            item_id=5,
+            kind="attempt",
+            score=100.0,
+            checks_passed=5,
+            checks_total=5,
             created_at=datetime(2026, 3, 2, 16, 0),
         ),
     ]
@@ -161,7 +215,8 @@ class TestScores:
     @pytest.mark.asyncio
     async def test_scores_returns_200(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/scores", params={"lab": "lab-04"},
+            "/analytics/scores",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         assert resp.status_code == 200
@@ -169,7 +224,8 @@ class TestScores:
     @pytest.mark.asyncio
     async def test_scores_returns_four_buckets(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/scores", params={"lab": "lab-04"},
+            "/analytics/scores",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = resp.json()
@@ -180,7 +236,8 @@ class TestScores:
     @pytest.mark.asyncio
     async def test_scores_counts_are_correct(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/scores", params={"lab": "lab-04"},
+            "/analytics/scores",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = {d["bucket"]: d["count"] for d in resp.json()}
@@ -196,7 +253,8 @@ class TestScores:
     @pytest.mark.asyncio
     async def test_scores_excludes_other_labs(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/scores", params={"lab": "lab-04"},
+            "/analytics/scores",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         total = sum(d["count"] for d in resp.json())
@@ -212,7 +270,8 @@ class TestPassRates:
     @pytest.mark.asyncio
     async def test_pass_rates_returns_200(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/pass-rates", params={"lab": "lab-04"},
+            "/analytics/pass-rates",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         assert resp.status_code == 200
@@ -220,7 +279,8 @@ class TestPassRates:
     @pytest.mark.asyncio
     async def test_pass_rates_returns_tasks(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/pass-rates", params={"lab": "lab-04"},
+            "/analytics/pass-rates",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = resp.json()
@@ -232,7 +292,8 @@ class TestPassRates:
     @pytest.mark.asyncio
     async def test_pass_rates_avg_scores(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/pass-rates", params={"lab": "lab-04"},
+            "/analytics/pass-rates",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = {d["task"]: d for d in resp.json()}
@@ -246,7 +307,8 @@ class TestPassRates:
     @pytest.mark.asyncio
     async def test_pass_rates_has_correct_fields(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/pass-rates", params={"lab": "lab-04"},
+            "/analytics/pass-rates",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         for item in resp.json():
@@ -264,7 +326,8 @@ class TestTimeline:
     @pytest.mark.asyncio
     async def test_timeline_returns_200(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/timeline", params={"lab": "lab-04"},
+            "/analytics/timeline",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         assert resp.status_code == 200
@@ -272,7 +335,8 @@ class TestTimeline:
     @pytest.mark.asyncio
     async def test_timeline_has_correct_dates(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/timeline", params={"lab": "lab-04"},
+            "/analytics/timeline",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = resp.json()
@@ -284,7 +348,8 @@ class TestTimeline:
     @pytest.mark.asyncio
     async def test_timeline_submission_counts(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/timeline", params={"lab": "lab-04"},
+            "/analytics/timeline",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = {d["date"]: d["submissions"] for d in resp.json()}
@@ -298,7 +363,8 @@ class TestTimeline:
     @pytest.mark.asyncio
     async def test_timeline_ordered_by_date(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/timeline", params={"lab": "lab-04"},
+            "/analytics/timeline",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         dates = [d["date"] for d in resp.json()]
@@ -314,7 +380,8 @@ class TestGroups:
     @pytest.mark.asyncio
     async def test_groups_returns_200(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/groups", params={"lab": "lab-04"},
+            "/analytics/groups",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         assert resp.status_code == 200
@@ -322,7 +389,8 @@ class TestGroups:
     @pytest.mark.asyncio
     async def test_groups_has_all_groups(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/groups", params={"lab": "lab-04"},
+            "/analytics/groups",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = resp.json()
@@ -334,7 +402,8 @@ class TestGroups:
     @pytest.mark.asyncio
     async def test_groups_student_counts(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/groups", params={"lab": "lab-04"},
+            "/analytics/groups",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = {d["group"]: d for d in resp.json()}
@@ -348,7 +417,8 @@ class TestGroups:
     @pytest.mark.asyncio
     async def test_groups_avg_scores(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/groups", params={"lab": "lab-04"},
+            "/analytics/groups",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         data = {d["group"]: d for d in resp.json()}
@@ -362,7 +432,8 @@ class TestGroups:
     @pytest.mark.asyncio
     async def test_groups_has_correct_fields(self, client: AsyncClient):
         resp = await client.get(
-            "/analytics/groups", params={"lab": "lab-04"},
+            "/analytics/groups",
+            params={"lab": "lab-04"},
             headers={"Authorization": "Bearer test"},
         )
         for item in resp.json():
