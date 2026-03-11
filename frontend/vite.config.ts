@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
+        "/analytics": { target, changeOrigin: true },
         "/items": { target, changeOrigin: true },
         "/learners": { target, changeOrigin: true },
         "/interactions": { target, changeOrigin: true },

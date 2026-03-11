@@ -1,7 +1,10 @@
 import { useState, useEffect, useReducer, FormEvent } from 'react'
+import { Dashboard } from './Dashboard'
 import './App.css'
 
 const STORAGE_KEY = 'api_key'
+
+type Page = 'items' | 'dashboard'
 
 interface Item {
   id: number
@@ -33,6 +36,7 @@ function fetchReducer(_state: FetchState, action: FetchAction): FetchState {
 }
 
 function App() {
+  const [page, setPage] = useState<Page>('items')
   const [token, setToken] = useState(
     () => localStorage.getItem(STORAGE_KEY) ?? '',
   )
@@ -90,16 +94,34 @@ function App() {
   return (
     <div>
       <header className="app-header">
-        <h1>Items</h1>
+        <nav className="app-nav">
+          <button
+            className={page === 'items' ? 'nav-active' : ''}
+            onClick={() => setPage('items')}
+          >
+            Items
+          </button>
+          <button
+            className={page === 'dashboard' ? 'nav-active' : ''}
+            onClick={() => setPage('dashboard')}
+          >
+            Dashboard
+          </button>
+        </nav>
+        <h1>{page === 'items' ? 'Items' : 'Dashboard'}</h1>
         <button className="btn-disconnect" onClick={handleDisconnect}>
           Disconnect
         </button>
       </header>
 
-      {fetchState.status === 'loading' && <p>Loading...</p>}
-      {fetchState.status === 'error' && <p>Error: {fetchState.message}</p>}
+      {page === 'dashboard' && <Dashboard />}
 
-      {fetchState.status === 'success' && (
+      {page === 'items' && (
+        <>
+          {fetchState.status === 'loading' && <p>Loading...</p>}
+          {fetchState.status === 'error' && <p>Error: {fetchState.message}</p>}
+
+          {fetchState.status === 'success' && (
         <table>
           <thead>
             <tr>
@@ -120,6 +142,8 @@ function App() {
             ))}
           </tbody>
         </table>
+          )}
+        </>
       )}
     </div>
   )
